@@ -35,3 +35,6 @@
 1. wheel==0.24.0  => 0.31.1
     - packaging and distribution
 
+pipenv install dj-database-url django django-bootstrap3 django-grappelli django-localflavor django-registration-redux djangorestframework pillow psycopg2-binary
+
+pipenv install -d factory-boy requests selenium splinter

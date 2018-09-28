@@ -1,5 +1,4 @@
 from django.test import TestCase, Client
-from django.core.urlresolvers import reverse
 from . import models
 from estmator_project.factories import (
     UserFactory, ClientFactory, CompanyFactory, CategoryFactory,
@@ -18,7 +17,7 @@ class TestAPIClientView(TestCase):
     def test_denied_if_no_login(self):
         self.res = self.c.post('/api/v1/client/', follow=True)
         self.assertEqual(self.res.status_code, 200)
-        self.assertIn('Log in', self.res.content)
+        self.assertIn(b'Log in', self.res.content)
 
     def test_client_added(self):
         self.c.login(

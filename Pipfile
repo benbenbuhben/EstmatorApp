@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+"psycopg2" = ">=2.7"
 dj-database-url = "*"
 django = "*"
 "django-bootstrap3" = "*"
@@ -13,12 +14,12 @@ django-registration-redux = "*"
 djangorestframework = "*"
 pillow = "*"
 "psycopg2-binary" = "*"
+selenium = "*"
 
 [dev-packages]
 factory-boy = "*"
 requests = "*"
-selenium = "*"
 splinter = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
