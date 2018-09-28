@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+"psycopg2" = ">=2.7"
+dj-database-url = "*"
+django = "*"
+"django-bootstrap3" = "*"
+django-grappelli = "*"
+django-localflavor = "*"
+django-registration-redux = "*"
+djangorestframework = "*"
+pillow = "*"
+"psycopg2-binary" = "*"
+selenium = "*"
+
+[dev-packages]
+factory-boy = "*"
+requests = "*"
+splinter = "*"
+
+[requires]
+python_version = "3.7"

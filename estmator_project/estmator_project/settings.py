@@ -12,43 +12,91 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
+
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Testing Settings
+TESTING = 'test' in sys.argv
+if TESTING:
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "estmator_project/static"),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f_c@$n+^7p2@d+64*x$$37dam)6$tk4bffbdvli0%j74y+y0+$'
+SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
+TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
-
-# Application definition
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'est_api',
     'est_profile',
     'est_quote',
-    'est_client'
+    'est_client',
+    'registration',
+    'bootstrap3',
+    'rest_framework',
+    'localflavor'
 )
 
-MIDDLEWARE_CLASSES = (
+
+# email settings
+SITE_ID = 1
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend'
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
+EMAIL_PORT = os.environ.get('EMAIL_PORT', None)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', None)
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', None)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', None)
+EMAIL_TIMEOUT = os.environ.get('EMAIL_TIMEOUT', None)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+USE_HTML_TEMPLATES = os.environ.get('USE_HTML_TEMPLATES', True)
+
+# registration settings
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_EMAIL_HTML = USE_HTML_TEMPLATES
+LOGIN_REDIRECT_URL = '/menu/'
+
+
+# Grappelli Settings
+GRAPPELLI_ADMIN_TITLE = 'Estmator Admin'
+
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +107,9 @@ ROOT_URLCONF = 'estmator_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'estmator_project/templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,30 +127,35 @@ WSGI_APPLICATION = 'estmator_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+DATABASES = {'default': dj_database_url.config(
+    default='postgres://localhost:5432/estmator'
+    )
 }
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
+USE_I18N = os.environ.get('USE_I18N', True)
+USE_L10N = os.environ.get('USE_L10N', True)
+USE_TZ = os.environ.get('USE_TZ', True)
 
-TIME_ZONE = 'UTC'
+# Login Behavior
+LOGIN_REDIRECT_URL = '/menu'
 
-USE_I18N = True
+BOOTSTRAP3 = {
 
-USE_L10N = True
+    # The URL to the jQuery JavaScript file
+    'jquery_url': '//code.jquery.com/jquery.min.js',
 
-USE_TZ = True
+    # The Bootstrap base URL
+    'base_url': '//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/',
 
+    # The complete URL to the Bootstrap CSS file (None means no theme)
+    # 'theme_url': os.path.join(STATIC_URL, 'css', 'style.css'),
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
+    # Put JavaScript in the HEAD section of the HTML document (only relevant if you use bootstrap3.html)
+    'javascript_in_head': True,
 
-STATIC_URL = '/static/'
+}
